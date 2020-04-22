@@ -1,0 +1,10 @@
+<script>
+    /**
+     * 作业 1：写一个正则表达式，匹配所有 Number 直接量
+     * 思路：
+     *      Number 直接量有两种：正负整数、正负浮点数
+    */
+    let value = '6..7.5,-8.05,-0.714rrwqrasrewqr1rewrq52rewe2.4rewqr0.333rwr3.141569';
+    let numPattern2 = /[-]?[\d]*[\.]?[\d]+/g
+    console.log(value.match(numPattern2));
+</script>

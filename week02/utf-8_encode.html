@@ -1,0 +1,45 @@
+<script>
+    /**
+     * 作业 2：写一个 UTF-8 Encoding 函数
+     * 思路：
+     *      明白 UTF-8 到底是什么，与 Unicode 有什么区别
+     *      对任意字符取出 Unicode，再转成 UTF-8  
+    */
+
+    alert(getCharUTF8Code("严"));
+    // getCharUTF8Code("6");
+    // alert(getOctValue(0x0000007F));
+
+    function utf8Encode(string) {
+        return new Buffer();
+    }
+
+    // 获取单个字符的 UTF-8 编码
+    function getCharUTF8Code(char) {
+        let codePointValue = char.codePointAt(0);
+
+        // 0000 0000-0000 007F | 0xxxxxxx
+        // 0000 0080-0000 07FF | 110xxxxx 10xxxxxx
+        // 0000 0800-0000 FFFF | 1110xxxx 10xxxxxx 10xxxxxx
+        // 0001 0000-0010 FFFF | 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx
+
+        if (codePointValue >= getOctValue(0x00000000) && codePointValue <= getOctValue(0x0000007F)) {
+            return (codePointValue & 0x7F).toString(16);
+        } else if (codePointValue >= getOctValue(0x00000080) && codePointValue <= getOctValue(0x000007FF)) {
+        } else if (codePointValue >= getOctValue(0x00000800) && codePointValue <= getOctValue(0x0000FFFF)) {
+            // 第一个字节
+            let A = (codePointValue >> 12) & 0x0F;
+            let B = 0xEF & 0xE0;
+            // 第二个字节
+            // let C = (codePointValue >> 6) & 0x3F;
+            // let B = 
+            return (A | B).toString(16);
+        } else if (codePointValue >= getOctValue(0x00010000) && codePointValue <= getOctValue(0x0010FFFF)) {
+        }
+    }
+
+    // 16 进制转换成 10 进制
+    function getOctValue(hexValue) {
+        return (hexValue).toString(10);
+    }
+</script>
