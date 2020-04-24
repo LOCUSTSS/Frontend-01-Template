@@ -4,37 +4,123 @@
      * 思路：
      *      明白 UTF-8 到底是什么，与 Unicode 有什么区别
      *      对任意字符取出 Unicode，再转成 UTF-8  
+     * 
+     * Unicode 码点对应范围(十六进制) 及 UTF-8(二进制)：
+     *      0000 0000-0000 007F | 0xxxxxxx
+            0000 0080-0000 07FF | 110xxxxx 10xxxxxx
+            0000 0800-0000 FFFF | 1110xxxx 10xxxxxx 10xxxxxx
+            0001 0000-0010 FFFF | 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx
     */
 
-    alert(getCharUTF8Code("严"));
-    // getCharUTF8Code("6");
-    // alert(getOctValue(0x0000007F));
+    // 整串字符测试
+    alert(getUT8EncodeStr("各个国家有各个国家的国歌！I am fine, Thank you! 123456"));
 
-    function utf8Encode(string) {
-        return new Buffer();
+    // 获取一串字符的 UTF-8 编码格式
+    function getUT8EncodeStr(str) {
+        let res = "";
+        const chars = [...str];
+
+        if (chars !== undefined && chars.length > 0) {
+            chars.forEach(char => {
+                let cpVal = char.codePointAt(0);
+                res += getCharFormatValue(getUTF8EncodeArr(cpVal));
+            });
+        }
+        return res;
     }
 
     // 获取单个字符的 UTF-8 编码
     function getCharUTF8Code(char) {
         let codePointValue = char.codePointAt(0);
+        return getCharFormatValue(getUTF8EncodeArr(codePointValue));
+    }
 
-        // 0000 0000-0000 007F | 0xxxxxxx
-        // 0000 0080-0000 07FF | 110xxxxx 10xxxxxx
-        // 0000 0800-0000 FFFF | 1110xxxx 10xxxxxx 10xxxxxx
-        // 0001 0000-0010 FFFF | 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx
+    // 根据编码数组生成预期格式字符串
+    function getCharFormatValue(arr) {
+        let res = '';
 
-        if (codePointValue >= getOctValue(0x00000000) && codePointValue <= getOctValue(0x0000007F)) {
-            return (codePointValue & 0x7F).toString(16);
-        } else if (codePointValue >= getOctValue(0x00000080) && codePointValue <= getOctValue(0x000007FF)) {
-        } else if (codePointValue >= getOctValue(0x00000800) && codePointValue <= getOctValue(0x0000FFFF)) {
-            // 第一个字节
-            let A = (codePointValue >> 12) & 0x0F;
-            let B = 0xEF & 0xE0;
-            // 第二个字节
-            // let C = (codePointValue >> 6) & 0x3F;
-            // let B = 
-            return (A | B).toString(16);
-        } else if (codePointValue >= getOctValue(0x00010000) && codePointValue <= getOctValue(0x0010FFFF)) {
+        if (arr.length > 0) {
+            arr.forEach(item => {
+                res += ('\\x' + item.toUpperCase());
+            });
+        }
+
+        return res;
+    }
+
+    // 1 字节的 UTF8 编码函数，返回编码数组
+    function getOneByteUTF8Arr(codePointValue) {
+        return [(codePointValue & 0x7F).toString(16)];
+    }
+
+    // 2 字节的 UTF8 编码函数，返回编码数组
+    function getTwoByteUTF8Arr(codePointValue) {
+        // 第 1 字节
+        let fstByteLow = (codePointValue >> 6) & 0x1F;
+        let fstByteHigh = 0xDF & 0xE0;
+        // 第 2 字节
+        let secByteLow = codePointValue & 0x3F;
+        let secByteHigh = 0xBF & 0xC0;
+        return [(fstByteHigh | fstByteLow).toString(16), (secByteHigh | secByteLow).toString(16)];
+    }
+
+    // 3 字节的 UTF8 编码函数，返回编码数组
+    function getThreeByteUTF8Arr(codePointValue) {
+        // 第 1 字节
+        let fstByteLow = (codePointValue >> 12) & 0x0F;
+        let fstByteHigh = 0xEF & 0xE0;
+        // 第 2 字节
+        let secByteLow = (codePointValue >> 6) & 0x3F;
+        let secByteHigh = 0xBF & 0xC0;
+        // 第 3 字节
+        let trdByteLow = codePointValue & 0x3F;
+        let trdByteHigh = 0xBF & 0xC0;
+        return [(fstByteHigh | fstByteLow).toString(16), (secByteHigh | secByteLow).toString(16), (trdByteHigh | trdByteLow).toString(16)];
+    }
+
+    // 4 字节的 UTF8 编码函数，返回编码数组
+    function getFourByteUTF8Arr(codePointValue) {
+        // 第 1 字节
+        let fstByteLow = (codePointValue >> 18) & 0x07;
+        let fstByteHigh = 0xF7 & 0xC0;
+        // 第 2 字节
+        let secByteLow = (codePointValue >> 12) & 0x3F;
+        let secByteHigh = 0xBF & 0xC0;
+        // 第 3 字节
+        let trdByteLow = (codePointValue >> 6) & 0x3F;
+        let trdByteHigh = 0xBF & 0xC0;
+        // 第 4 字节
+        let fthByteLow = codePointValue & 0x3F;
+        let fthByteHigh = 0xBF & 0xC0;
+        return [(fstByteHigh | fstByteLow).toString(16), (secByteHigh | secByteLow).toString(16),
+        (trdByteHigh | trdByteLow).toString(16), (fthByteHigh | fthByteLow).toString(16)];
+    }
+
+    // 根据字节数返回当前对应的 UTF-8 编码数组
+    function getUTF8EncodeArr(value) {
+        let type = getCodePointType(value);
+
+        if (type === 1) {
+            return getOneByteUTF8Arr(value);
+        } else if (type === 2) {
+            return getTwoByteUTF8Arr(value);
+        } else if (type === 3) {
+            return getThreeByteUTF8Arr(value);
+        } else if (type === 4) {
+            return getFourByteUTF8Arr(value);
+        }
+    }
+
+    // 检查码点值类型，返回值代表当前 Unicode 所占字节数
+    function getCodePointType(value) {
+        if (value >= getOctValue(0x00000000) && value <= getOctValue(0x0000007F)) {
+            return 1;
+        } else if (value >= getOctValue(0x00000080) && value <= getOctValue(0x000007FF)) {
+            return 2;
+        } else if (value >= getOctValue(0x00000800) && value <= getOctValue(0x0000FFFF)) {
+            return 3;
+        } else if (value >= getOctValue(0x00010000) && value <= getOctValue(0x0010FFFF)) {
+            return 4;
         }
     }
 
