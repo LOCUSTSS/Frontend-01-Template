@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        /* 只有两个状态，设置关键帧，代表两种状态 */
+        /* @keyframes mykf {
+            from { background: red; }
+            to { background: yellow; }
+        } */
+
+        /* 多个状态，使用百分比形式 */
+        @keyframes mykf {
+            0%  { top: 0; transition: top ease }
+            50% { top: 30px; transition: top ease-in }
+            75% { top: 10px; transition: top ease-out }
+            100% { top: 0; transition: top linear }
+        }
+
+        div {
+            animation: mykf 5s infinite;
+        }
+
+        #rect {
+            width: 100px;
+            height: 100px;
+        }
+    </style>
+</head>
+<body>
+    <div id="rect"></div>
+</body>
+</html>

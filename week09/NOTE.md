@@ -1,3 +1,54 @@
+## 动画和绘制
+
+### Animation
+
+* @keyframes 定义
+
+* animation 使用
+* 属性
+  * animation-name 时间曲线
+  * animation-duration 动画时长
+  * animation-timing-function 动画的时间曲线
+  * animation-delay 动画开始前的延迟
+  * animation-iteration-count 动画的播放次数
+  * animation-direction 动画的方向
+
+### Transition
+
+* 属性
+  * transition-property 要变换的属性
+  * transition-duration 变换的时长
+  * transition-timing-function 时间曲线
+  * transition-delay 延迟
+
+#### 贝塞尔曲线
+
+https://cubic-bezier.com/#.42,0,1,1
+
+[https://zh.wikipedia.org/wiki/%E8%B2%9D%E8%8C%B2%E6%9B%B2%E7%B7%9A](https://zh.wikipedia.org/wiki/貝茲曲線)
+
+* 1 次贝塞尔曲线
+* 2 次贝塞尔曲线
+* 3 次贝塞尔曲线
+* 推荐使用 ease 方式，有意思的 case，使用代码实现贝塞尔曲线拟合
+
+### 渲染与颜色
+
+* CMYK 与 RGB，两种不同的颜色体系
+
+* HSL 和 HSV
+
+### 形状
+
+* border
+* box-shadow
+* border-radius
+* data uri + svg (矢量图都用 svg)，svg 基础知识可以直接在 w3school 中过一遍
+
+### 作业
+
+对 css 中的 property 进行分类，去除 -webkit 前缀的属性，并用脑图绘制出来(高阶版可以将 property 的属性和所属标准也加上)。
+
 ## HTML 语言与扩展
 
 ### HTML 定义
