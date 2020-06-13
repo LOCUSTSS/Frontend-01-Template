@@ -1,0 +1,29 @@
+<div id="x">
+    <div>1</div>
+    <div>2</div>
+    <div>3</div>
+    <div>4</div>
+</div>
+
+<div id="b"></div>
+
+<script>
+    var x = document.getElementById("x")
+    var b = document.getElementById("b")
+
+    // 错误示例
+    /**
+      * 当 i = 0 时，b append 结点值为 1 的结点，由于 x.children 是实时变化的，x.children.length 值减 1，为 3， i++ 为 1
+      * 当 i = 1 时，b append 结点值为 3 的结点(下标为 1 的结点)， x.children.length 值减 1，为 2，i++ 为 2
+      * i 不满足条件，循环退出
+    */
+    // for (var i = 0; i < x.children.length; i++) {
+    //     console.log(i, x.children[i])
+    //     b.appendChild(x.children[i])
+    // }
+
+    // 正确示例
+    while(x.children.length) {
+        b.appendChild(x.children[0])
+    }
+</script>
